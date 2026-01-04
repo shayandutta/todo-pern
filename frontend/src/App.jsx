@@ -3,7 +3,7 @@ import axios from "axios";
 import { MdModeEditOutline, MdOutlineDone } from "react-icons/md";
 import { FaTrash } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
-import { API_URL } from "./api.js";
+// import { API_URL } from "./api.js";
 
 function App() {
   const [description, setDescription] = useState("");
@@ -37,7 +37,7 @@ function App() {
     if (!description.trim()) return;
     try {
       setError(null);
-      const res = await axios.post(`${API_URL}/todos`, {
+      const res = await axios.post(`http://localhost:5070/api/v1/todos`, {
         description: description.trim(),
         completed: false,
       });
@@ -61,7 +61,7 @@ function App() {
         setEditedText("");
         return;
       }
-      await axios.put(`${API_URL}/todos/${id}`, {
+      await axios.put(`http://localhost:5070/api/v1/todos/${id}`, {
         description: trimmedText,
       });
       setEditingTodo(null);
@@ -82,7 +82,7 @@ function App() {
   const deleteTodo = async (id) => {
     try {
       setError(null);
-      await axios.delete(`${API_URL}/todos/${id}`);
+      await axios.delete(`http://localhost:5070/api/v1/todos/${id}`);
       setTodos(todos.filter((todo) => todo.todo_id !== id));
     } catch (err) {
       console.error(err.message);
@@ -94,7 +94,7 @@ function App() {
     try {
       setError(null);
       const todo = todos.find((todo) => todo.todo_id === id);
-      await axios.put(`${API_URL}/todos/${id}`, {
+      await axios.put(`http://localhost:5070/api/v1/todos/${id}`, {
         description: todo.description,
         completed: !todo.completed,
       });

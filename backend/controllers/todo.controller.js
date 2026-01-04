@@ -5,14 +5,14 @@ import pool from "../db/db.js";
 export const createTodoController = async (req, res) => {
   try {
     const { description, completed } = req.body;
-    if (!description || !completed) {
-      res.status(400).json({
+    if (!description || completed === undefined || completed === null) {
+      return res.status(400).json({
         message: "Description and completed are required",
       });
     }
     const newTodo = await pool.query(
       "INSERT INTO todo (description, completed) VALUES ($1, $2) RETURNING *",
-      [description, completed || false]
+      [description, completed]
     );
     res.status(201).json(newTodo.rows[0]); //returning the new todo created -> this is the todo that was created in the database -> 0th index is the todo that was created
   } catch (err) {
@@ -41,8 +41,8 @@ export const updateTodoController = async (req, res) => {
   try {
     const { id } = req.params;
     const { description, completed } = req.body;
-    if (!description || !completed) {
-      res.status(400).json({
+    if (!description || completed === undefined || completed === null) {
+      return res.status(400).json({
         message: "Description and completed status are required",
       });
     }
@@ -51,7 +51,7 @@ export const updateTodoController = async (req, res) => {
       [description, completed, id]
     );
     if (updatedTodo.rows.length === 0) {
-      res.status(404).json({
+      return res.status(404).json({
         message: "Todo not found",
       });
     }
@@ -73,7 +73,7 @@ export const deleteTodoController = async (req, res) => {
       [id]
     );
     if (deletedTodo.rows.length === 0) {
-      res.status(404).json({
+      return res.status(404).json({
         message: "Todo not found",
       });
     }
