@@ -63,14 +63,13 @@ function App() {
       }
       await axios.put(`http://localhost:5070/api/v1/todos/${id}`, {
         description: trimmedText,
+        completed: currentTodo.completed,
       });
       setEditingTodo(null);
       setEditedText("");
       setTodos(
         todos.map((todo) =>
-          todo.todo_id === id
-            ? { ...todo, description: trimmedText, completed: false }
-            : todo
+          todo.todo_id === id ? { ...todo, description: trimmedText } : todo
         )
       );
     } catch (err) {
